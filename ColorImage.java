@@ -67,16 +67,12 @@ public class ColorImage {
     }
 
     public void reduceColor(int d) {
-        int maxColorValue = (int) Math.pow(2, d) - 1;
-
         for (int i = 0; i < pixels.size(); i++) {
             int[] pixel = pixels.get(i);
 
             for (int c = 0; c < pixel.length; c++) {
-                pixel[c] = (pixel[c] * maxColorValue) / 255;
+                pixel[c] = pixel[c] >> (8 - d);
             }
-
-            pixels.set(i, pixel);
         }
     }
 
@@ -88,12 +84,13 @@ public class ColorImage {
         // System.out.println("Depth: " + colorImage.getDepth());
 
         // Display pixel values for a specific pixel
-        int i = 2; // column
-        int j = 2; // row
+        int i = 0; // column
+        int j = 0; // row
         int[] pixel = colorImage.getPixel(i, j);
 
-        // colorImage.reduceColor(3);
+        System.out.println("Pixel at column " + i + ", row " + j + ": [" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + "]");
 
+        colorImage.reduceColor(3);
 
         System.out.println("Pixel at column " + i + ", row " + j + ": [" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + "]");
     }
