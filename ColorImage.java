@@ -75,23 +75,4 @@ public class ColorImage {
             }
         }
     }
-
-    public static void main(String[] args) {
-        ColorImage colorImage = new ColorImage("queryImages/q01.ppm");
-
-        // System.out.println("Width: " + colorImage.getWidth());
-        // System.out.println("Height: " + colorImage.getHeight());
-        // System.out.println("Depth: " + colorImage.getDepth());
-
-        // Display pixel values for a specific pixel
-        int i = 0; // column
-        int j = 0; // row
-        int[] pixel = colorImage.getPixel(i, j);
-
-        System.out.println("Pixel at column " + i + ", row " + j + ": [" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + "]");
-
-        colorImage.reduceColor(3);
-
-        System.out.println("Pixel at column " + i + ", row " + j + ": [" + pixel[0] + ", " + pixel[1] + ", " + pixel[2] + "]");
-    }
 }

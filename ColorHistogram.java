@@ -30,7 +30,6 @@ public class ColorHistogram {
     }
 
     // Compare two histograms and return the intersection
-    // TODO: figure out how to compare histograms
     public double compare(ColorHistogram hist) {
         double[] otherHistogram = hist.getHistogram();
         double intersection = 0.0;
@@ -45,6 +44,7 @@ public class ColorHistogram {
     // Save the histogram into a text file
     public void save(String filename) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            writer.println((int) Math.pow(2, this.bitDepth * 3));
             for (double value : histogram) {
                 writer.print(value + " ");
             }
@@ -105,18 +105,5 @@ public class ColorHistogram {
         for (int i = 0; i < histogram.length; i++) {
             histogram[i] /= totalPixels;
         }
-    }
-
-    public static void main(String[] args) {
-
-        ColorHistogram histogram = new ColorHistogram("imageDataset2_15_20/25.jpg.txt");
-        double[] histogramValues = histogram.getHistogram();
-
-        double sum = 0.0;
-        for (double value : histogramValues) {
-            sum += value;
-        }
-
-        System.out.println("Sum of histogram values: " + sum);
     }
 }
