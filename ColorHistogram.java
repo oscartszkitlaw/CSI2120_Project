@@ -56,6 +56,7 @@ public class ColorHistogram {
     // Load the histogram from a text file
     private void loadHistogramFromFile(String filename) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+
             // get number of bins and depth of image
             int numBins = Integer.parseInt(reader.readLine());
             this.bitDepth = (int)(Math.log(numBins) / (3 * Math.log(2)));
@@ -107,7 +108,15 @@ public class ColorHistogram {
     }
 
     public static void main(String[] args) {
+
         ColorHistogram histogram = new ColorHistogram("imageDataset2_15_20/25.jpg.txt");
-        System.out.println(Arrays.toString(histogram.getHistogram()));
+        double[] histogramValues = histogram.getHistogram();
+
+        double sum = 0.0;
+        for (double value : histogramValues) {
+            sum += value;
+        }
+
+        System.out.println("Sum of histogram values: " + sum);
     }
 }
