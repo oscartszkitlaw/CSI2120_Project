@@ -1,3 +1,8 @@
+/*
+ * Group Members: Charley Liu, Oscar (Tsz Kit) Law
+ * Student IDs: 300304744, 300306180
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,6 +14,11 @@ public class ColorImage {
     private int depth;
     private ArrayList<int[]> pixels;
 
+    /**
+     * A constructor that creates an image from a file
+     * 
+     * @param filename The image's filename
+     */
     public ColorImage(String filename) {
         try {
             readImageFromFile(filename);
@@ -17,7 +27,12 @@ public class ColorImage {
         }
     }
 
-    // Reads image from file assuming PPM format
+    /**
+     * A method that reads data from a PPM file
+     * 
+     * @param filename A ppm file
+     * @throws IOException if file is not found
+     */
     private void readImageFromFile(String filename) throws IOException {
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
 
@@ -51,21 +66,30 @@ public class ColorImage {
     public int getWidth() {
         return width;
     }
-
     public int getHeight() {
         return height;
     }
-
     public int getDepth() {
         return depth;
     }
 
-    // Method to get the 3-channel value of a pixel at column i, row j
+    /**
+     * A method to get the 3-channel value of a pixel at column i, row j
+     * 
+     * @param i The column of the pixel to search
+     * @param j The row of the pixel to search
+     * @return An int array of size 3 representing the rgb values of the pixel
+     */
     public int[] getPixel(int i, int j) {
         int index = j * width + i;
         return pixels.get(index);
     }
 
+    /**
+     * A method that reduces the color space of the image to a d-bit representation
+     * 
+     * @param d the number of bits per pixel
+     */
     public void reduceColor(int d) {
         this.depth = d;
         

@@ -1,28 +1,31 @@
+/*
+ * Group Members: Charley Liu, Oscar (Tsz Kit) Law
+ * Student IDs: 300304744, 300306180
+ */
+
 import java.io.File;
 import java.util.PriorityQueue;
 
 public class SimilaritySearch {
-
-    private static void addAmount(PriorityQueue<textFileResultPair> priorityQueue, textFileResultPair pair) {
-        if (priorityQueue.size() < 5 || priorityQueue.peek().getResult() < pair.getResult()) {
-            if (priorityQueue.size() >= 5) {
-                priorityQueue.poll();
-            }
-            priorityQueue.offer(pair);
-        }
-    }
-
+    /**
+     * The main method for the program
+     * 
+     * @param args[0] the query image
+     * @param args[1] the dataset folder
+     */
     public static void main(String[] args) {
         try {
+            // Parse command line arguments
             String queryString = args[0];
             String datasetFolder = args[1];
 
             // Load the query image and compute its histogram
             ColorImage queryImage = new ColorImage("queryImages/" + queryString);
+            queryImage.reduceColor(3);
             ColorHistogram queryHistogram = new ColorHistogram(3);
             queryHistogram.setImage(queryImage);
 
-            PriorityQueue<textFileResultPair> minAmountPriorityQueue = new PriorityQueue<>();
+            PriorityQueue<TextFileResultPair> minAmountPriorityQueue = new PriorityQueue<>();
 
             System.out.println("Query Image: " + queryString);
             System.out.println("Image Dataset: " + datasetFolder);
@@ -34,18 +37,27 @@ public class SimilaritySearch {
             for (File file : files) {
                 if (file.isFile() && file.getName().endsWith(".txt")) {
                     String fileName = file.getName();
+
+                    // compute the image's histogram and comparison result with the query image
                     ColorHistogram comparisonHistogram = new ColorHistogram(datasetFolder + "/" + fileName);
                     double comparisonResult = queryHistogram.compare(comparisonHistogram);
 
-                    textFileResultPair fileResultPair = new textFileResultPair(fileName, comparisonResult);
-                    addAmount(minAmountPriorityQueue, fileResultPair);
+                    // Check if the result can be added to the priority queue of the 5 most similar images
+                    TextFileResultPair fileResultPair = new TextFileResultPair(fileName, comparisonResult);
+                    if (minAmountPriorityQueue.size() < 5 || minAmountPriorityQueue.peek().getResult() < fileResultPair.getResult()) {
+                        if (minAmountPriorityQueue.size() >= 5) {
+                            minAmountPriorityQueue.poll();
+                        }
+
+                        minAmountPriorityQueue.offer(fileResultPair);
+                    }
                 }
             }
 
-            // // Retrieve and print the highest 5 amounts
-            int rank = 5;
+            // Retrieve and print the 5 most similar images
+            int rank = minAmountPriorityQueue.size();
             while (!minAmountPriorityQueue.isEmpty()) {
-                textFileResultPair res = minAmountPriorityQueue.poll();
+                TextFileResultPair res = minAmountPriorityQueue.poll();
                 System.out.println("#" + (rank--) + " --> Image: " + res.getFileName() + ", Similarity: " + res.getResult());
             }
         } catch (IndexOutOfBoundsException e) {
