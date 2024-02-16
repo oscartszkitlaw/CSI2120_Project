@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class ColorHistogram {
@@ -21,21 +20,35 @@ public class ColorHistogram {
     // Associate an image with the histogram instance
     public void setImage(ColorImage image) {
         this.image = image;
+        this.image.reduceColor(3);
         computeHistogram();
     }
 
     // Compute and return the normalized histogram of the image
     public double[] getHistogram() {
-        return Arrays.copyOf(histogram, histogram.length);
+        double[] normalizedHistogram = new double[histogram.length];
+
+        // count the total number of pixels
+        int totalPixels = 0;
+        for (double count : histogram) {
+            totalPixels += (int)count;
+        }
+        // normalize histogram by dividing
+        for (int i = 0; i < histogram.length; i++) {
+            normalizedHistogram[i] = histogram[i] / totalPixels;
+        }
+
+        return normalizedHistogram;
     }
 
     // Compare two histograms and return the intersection
     public double compare(ColorHistogram hist) {
+        double[] thisHistogram = this.getHistogram();
         double[] otherHistogram = hist.getHistogram();
         double intersection = 0.0;
 
-        for (int i = 0; i < histogram.length; i++) {
-            intersection += Math.min(histogram[i], otherHistogram[i]);
+        for (int i = 0; i < thisHistogram.length; i++) {
+            intersection += Math.min(thisHistogram[i], otherHistogram[i]);
         }
 
         return intersection;
@@ -60,7 +73,7 @@ public class ColorHistogram {
             // get number of bins and depth of image
             int numBins = Integer.parseInt(reader.readLine());
             this.bitDepth = (int)(Math.log(numBins) / (3 * Math.log(2)));
-            this.histogram = new double[(int) Math.pow(2, this.bitDepth * 3)];
+            this.histogram = new double[numBins];
 
             // load the histogram into the array
             String line = reader.readLine();
@@ -69,9 +82,6 @@ public class ColorHistogram {
             while (tokenizer.hasMoreTokens()) {
                 histogram[index++] = Double.parseDouble(tokenizer.nextToken());
             }
-            
-            // normalize histogram
-            normalizeHistogram();
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
@@ -88,22 +98,6 @@ public class ColorHistogram {
                 int b = pixel[2];
                 histogram[(r << (2 * this.bitDepth)) + (g << this.bitDepth) + b]++;
             }
-        }
-
-        // Normalize the histogram
-        normalizeHistogram();
-    }
-
-    // Normalize the histogram by dividing each bin count by the total number of pixels
-    private void normalizeHistogram() {
-        // count the total number of pixels
-        int totalPixels = 0;
-        for (double count : histogram) {
-            totalPixels += (int)count;
-        }
-        // normalize histogram by dividing
-        for (int i = 0; i < histogram.length; i++) {
-            histogram[i] /= totalPixels;
         }
     }
 }

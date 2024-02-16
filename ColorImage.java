@@ -29,7 +29,7 @@ public class ColorImage {
             String[] dimensions = br.readLine().split("\\s");
             width = Integer.parseInt(dimensions[0]);
             height = Integer.parseInt(dimensions[1]);
-            depth = Integer.parseInt(br.readLine());
+            depth = (int)((double)Math.log(Integer.parseInt(br.readLine())) / Math.log(2));
 
             // Reads the pixel values and adds them to an ArrayList
             pixels = new ArrayList<>();
@@ -62,11 +62,13 @@ public class ColorImage {
 
     // Method to get the 3-channel value of a pixel at column i, row j
     public int[] getPixel(int i, int j) {
-        int index = j * 5 + i;
+        int index = j * width + i;
         return pixels.get(index);
     }
 
     public void reduceColor(int d) {
+        this.depth = d;
+        
         for (int i = 0; i < pixels.size(); i++) {
             int[] pixel = pixels.get(i);
 
